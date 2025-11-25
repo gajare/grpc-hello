@@ -1,0 +1,17 @@
+syntax="proto3";
+package simple;
+option go_package ="./simple_hello.proto";
+
+
+service SimpleService{
+    rpc SendMessage (SimpleRequest) returns (SimpleResponse);
+}
+
+message SimpleRequest{
+    string myMessage=1;
+}
+
+message SimpleResponse{
+    string resply=1;
+    bool received=2;
+}
