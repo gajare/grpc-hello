@@ -14,6 +14,6 @@ message SimpleRequest {
 }
 
 message SimpleResponse {
-    string resply = 1;
+    string reply = 1;
     bool received = 2;
 }

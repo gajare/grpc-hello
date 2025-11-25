@@ -67,7 +67,7 @@ func (x *SimpleRequest) GetMyMessage() string {
 
 type SimpleResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resply        string                 `protobuf:"bytes,1,opt,name=resply,proto3" json:"resply,omitempty"`
+	Reply         string                 `protobuf:"bytes,1,opt,name=reply,proto3" json:"reply,omitempty"`
 	Received      bool                   `protobuf:"varint,2,opt,name=received,proto3" json:"received,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -103,9 +103,9 @@ func (*SimpleResponse) Descriptor() ([]byte, []int) {
 	return file_simple_hello_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SimpleResponse) GetResply() string {
+func (x *SimpleResponse) GetReply() string {
 	if x != nil {
-		return x.Resply
+		return x.Reply
 	}
 	return ""
 }
@@ -123,9 +123,9 @@ const file_simple_hello_proto_rawDesc = "" +
 	"\n" +
 	"\x12simple_hello.proto\x12\x06simple\"-\n" +
 	"\rSimpleRequest\x12\x1c\n" +
-	"\tmyMessage\x18\x01 \x01(\tR\tmyMessage\"D\n" +
-	"\x0eSimpleResponse\x12\x16\n" +
-	"\x06resply\x18\x01 \x01(\tR\x06resply\x12\x1a\n" +
+	"\tmyMessage\x18\x01 \x01(\tR\tmyMessage\"B\n" +
+	"\x0eSimpleResponse\x12\x14\n" +
+	"\x05reply\x18\x01 \x01(\tR\x05reply\x12\x1a\n" +
 	"\breceived\x18\x02 \x01(\bR\breceived2M\n" +
 	"\rSimpleService\x12<\n" +
 	"\vSendMessage\x12\x15.simple.SimpleRequest\x1a\x16.simple.SimpleResponseB\x15Z\x13./generated/;simpleb\x06proto3"
