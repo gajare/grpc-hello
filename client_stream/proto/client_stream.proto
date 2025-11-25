@@ -1,0 +1,19 @@
+syntax="proto3";
+package client_stream;
+
+option go_package="./client_stream.proto";
+
+service ClientStream{
+    rpc AmolBhai (Request) returns (Response);
+}
+
+message Request{
+    string score=1;
+    int32 round=2;
+}
+
+message Response{
+    string summery=1;
+    int32 total_score=2;
+    int32 total_round=3;
+}
