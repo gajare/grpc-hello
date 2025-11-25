@@ -1,7 +1,7 @@
 syntax="proto3";
 package client_stream;
 
-option go_package="./client_stream.proto";
+option go_package="./generated";
 
 service ClientStream{
     rpc AmolBhai (Request) returns (Response);
