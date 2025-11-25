@@ -1,17 +1,19 @@
-syntax="proto3";
+syntax = "proto3";
+
 package simple;
-option go_package ="./simple_hello.proto";
 
+// 👇 FIXED: give a Go import path and package name
+option go_package = "./generated/;simple";
 
-service SimpleService{
+service SimpleService {
     rpc SendMessage (SimpleRequest) returns (SimpleResponse);
 }
 
-message SimpleRequest{
-    string myMessage=1;
+message SimpleRequest {
+    string myMessage = 1;
 }
 
-message SimpleResponse{
-    string resply=1;
-    bool received=2;
+message SimpleResponse {
+    string resply = 1;
+    bool received = 2;
 }
