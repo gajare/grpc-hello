@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ClientStreamClient interface {
-	AmolBhai(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error)
+	AmolBhai(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[Request, Response], error)
 }
 
 type clientStreamClient struct {
@@ -37,21 +37,24 @@ func NewClientStreamClient(cc grpc.ClientConnInterface) ClientStreamClient {
 	return &clientStreamClient{cc}
 }
 
-func (c *clientStreamClient) AmolBhai(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Response, error) {
+func (c *clientStreamClient) AmolBhai(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[Request, Response], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Response)
-	err := c.cc.Invoke(ctx, ClientStream_AmolBhai_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &ClientStream_ServiceDesc.Streams[0], ClientStream_AmolBhai_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &grpc.GenericClientStream[Request, Response]{ClientStream: stream}
+	return x, nil
 }
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ClientStream_AmolBhaiClient = grpc.ClientStreamingClient[Request, Response]
 
 // ClientStreamServer is the server API for ClientStream service.
 // All implementations must embed UnimplementedClientStreamServer
 // for forward compatibility.
 type ClientStreamServer interface {
-	AmolBhai(context.Context, *Request) (*Response, error)
+	AmolBhai(grpc.ClientStreamingServer[Request, Response]) error
 	mustEmbedUnimplementedClientStreamServer()
 }
 
@@ -62,8 +65,8 @@ type ClientStreamServer interface {
 // pointer dereference when methods are called.
 type UnimplementedClientStreamServer struct{}
 
-func (UnimplementedClientStreamServer) AmolBhai(context.Context, *Request) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AmolBhai not implemented")
+func (UnimplementedClientStreamServer) AmolBhai(grpc.ClientStreamingServer[Request, Response]) error {
+	return status.Errorf(codes.Unimplemented, "method AmolBhai not implemented")
 }
 func (UnimplementedClientStreamServer) mustEmbedUnimplementedClientStreamServer() {}
 func (UnimplementedClientStreamServer) testEmbeddedByValue()                      {}
@@ -86,23 +89,12 @@ func RegisterClientStreamServer(s grpc.ServiceRegistrar, srv ClientStreamServer)
 	s.RegisterService(&ClientStream_ServiceDesc, srv)
 }
 
-func _ClientStream_AmolBhai_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ClientStreamServer).AmolBhai(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ClientStream_AmolBhai_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClientStreamServer).AmolBhai(ctx, req.(*Request))
-	}
-	return interceptor(ctx, in, info, handler)
+func _ClientStream_AmolBhai_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(ClientStreamServer).AmolBhai(&grpc.GenericServerStream[Request, Response]{ServerStream: stream})
 }
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ClientStream_AmolBhaiServer = grpc.ClientStreamingServer[Request, Response]
 
 // ClientStream_ServiceDesc is the grpc.ServiceDesc for ClientStream service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -110,12 +102,13 @@ func _ClientStream_AmolBhai_Handler(srv interface{}, ctx context.Context, dec fu
 var ClientStream_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "client_stream.ClientStream",
 	HandlerType: (*ClientStreamServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "AmolBhai",
-			Handler:    _ClientStream_AmolBhai_Handler,
+			StreamName:    "AmolBhai",
+			Handler:       _ClientStream_AmolBhai_Handler,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "client_stream.proto",
 }

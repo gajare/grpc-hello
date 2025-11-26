@@ -146,9 +146,9 @@ const file_client_stream_proto_rawDesc = "" +
 	"\vtotal_score\x18\x02 \x01(\x05R\n" +
 	"totalScore\x12\x1f\n" +
 	"\vtotal_round\x18\x03 \x01(\x05R\n" +
-	"totalRound2K\n" +
-	"\fClientStream\x12;\n" +
-	"\bAmolBhai\x12\x16.client_stream.Request\x1a\x17.client_stream.ResponseB\rZ\v./generatedb\x06proto3"
+	"totalRound2M\n" +
+	"\fClientStream\x12=\n" +
+	"\bAmolBhai\x12\x16.client_stream.Request\x1a\x17.client_stream.Response(\x01B\rZ\v./generatedb\x06proto3"
 
 var (
 	file_client_stream_proto_rawDescOnce sync.Once
